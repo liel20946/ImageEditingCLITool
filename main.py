@@ -56,6 +56,7 @@ def main():
     image_array = c_adjustment.apply(image_array)
     image = Image.fromarray(image_array)
     image.show()
+    # test
 
 
 if __name__ == "__main__":
