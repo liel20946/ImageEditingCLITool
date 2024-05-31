@@ -53,7 +53,8 @@ def main():
     b_filter = filter_factory.create_filter("box_blur", 9, 9)
     g_filter = filter_factory.create_filter("grey_scale")
     s_adjustment = adjustment_factory.create_adjustment("saturation", 4)
-    image_array = c_adjustment.apply(image_array)
+    s_filter = filter_factory.create_filter("sharpen", 0.5)
+    image_array = s_filter.apply(image_array)
     image = Image.fromarray(image_array)
     image.show()
     # test

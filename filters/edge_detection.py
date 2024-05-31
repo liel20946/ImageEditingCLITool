@@ -17,4 +17,8 @@ class EdgeDetection(BaseFilter):
         greyed_image = grey_scale_filter.apply(image_array)
         vertical_edges = convolve_2d(greyed_image, self.vertical_kernel)
         horizontal_edges = convolve_2d(greyed_image, self.horizontal_kernel)
-        return np.uint8(np.sqrt(vertical_edges ** 2 + horizontal_edges ** 2))
+        # combine the two edge images
+        edges = np.sqrt(np.square(vertical_edges) + np.square(horizontal_edges))
+        # normalize the edges
+        edges = (edges / np.max(edges)) * 255
+        return np.uint8(edges)
