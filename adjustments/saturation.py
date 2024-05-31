@@ -29,5 +29,4 @@ class Saturation(BaseAdjustment):
         hsl_array[..., 1] = np.clip(hsl_array[..., 1] * self.factor, 0, 255)
 
         adjusted_image = Image.fromarray(hsl_array, 'HSV').convert('RGB')
-
         return np.array(adjusted_image)

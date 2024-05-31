@@ -31,5 +31,4 @@ class EdgeDetection(BaseFilter):
 
         edges = np.sqrt(np.square(vertical_edges) + np.square(horizontal_edges))
         edges = (edges / np.max(edges)) * 255
-
         return np.uint8(edges)
