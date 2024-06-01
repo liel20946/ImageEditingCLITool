@@ -14,6 +14,9 @@ processing techniques using convolution and other mathematical operations.
 - **Adjustments**: Allows adjustments of brightness, contrast, and saturation.
 - **Layering**: Supports applying multiple filters and adjustments in sequence.
 
+### Supported Image Formats
+jpg, jpeg, png
+
 ## Getting Started
 
 ### Prerequisites

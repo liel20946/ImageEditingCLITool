@@ -25,6 +25,6 @@ class Sharpen(BaseFilter):
         # TODO: understand how this works
         edges = self.edge_detection.apply(image_array)
         if len(image_array.shape) == 3:
-            edges = edges[:, :, None].repeat(3, axis=2)
+            edges = edges[:, :, None].repeat(image_array.shape[2], axis=2)
         sharpened = image_array.astype(np.int16) + self.factor * edges
         return np.clip(sharpened, 0, 255)
