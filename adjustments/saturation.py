@@ -2,6 +2,10 @@ from adjustments.base_adjustment import BaseAdjustment
 from PIL import Image
 import numpy as np
 
+# Constants
+RGB_SHAPE_LENGTH = 3
+RGBA_CHANNEL_SIZE = 4
+
 
 class Saturation(BaseAdjustment):
     """
@@ -23,13 +27,13 @@ class Saturation(BaseAdjustment):
         """
         # TODO: understand how it works
 
-        if len(image_array.shape) != 3:  # if the image is not colored
+        if len(image_array.shape) != RGB_SHAPE_LENGTH:
             return image_array
-        is_rgba = image_array.shape[2] == 4  # Check if the image is RGBA
+        is_rgba = image_array.shape[2] == RGBA_CHANNEL_SIZE
 
         # Extract RGB channels and alpha channel (if present)
-        rgb_image = image_array[..., :3]
-        alpha_channel = image_array[..., 3:] if is_rgba else None
+        rgb_image = image_array[..., :RGB_SHAPE_LENGTH]
+        alpha_channel = image_array[..., RGB_SHAPE_LENGTH:] if is_rgba else None
         # Convert the RGB image to PIL image
         image = Image.fromarray(rgb_image, 'RGB')
 
