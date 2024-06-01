@@ -1,6 +1,6 @@
 # 🌄 Advanced Image Editing CLI Tool 
 
-## Introduction
+## 👋 Introduction
 
 Welcome to the Advanced Image Editing CLI Tool. This tool is designed to apply custom filters <br> 
 and adjustments to images through a command-line interface (CLI). It showcases advanced image <br>
