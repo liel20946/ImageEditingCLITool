@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Welcome to the Advanced Image Editing CLI Tool. This tool is designed to apply custom filters and adjustments<br>
-to images through a command-line interface (CLI). It showcases advanced image processing techniques using convolution<br>
-and other mathematical operations.
+Welcome to the Advanced Image Editing CLI Tool. This tool is designed to apply custom filters <br> 
+and adjustments to images through a command-line interface (CLI). It showcases advanced image <br>
+processing techniques using convolution and other mathematical operations.
 
 ## Features
 
@@ -22,8 +22,9 @@ and other mathematical operations.
 - NumPy
 - Pillow (PIL)
 ### Installation
-- The project should run without a problem, but if for some reason you are missing the required libraries <br>
-you can install the required packages using the requirements.txt file by running the following command:
+- The project should run without a problem, but if for some reason you are missing the <br>
+required libraries  you can install the required packages using the requirements.txt file <br>
+by running the following command:
 - `pip install -r requirements.txt`
 
 ## Usage
