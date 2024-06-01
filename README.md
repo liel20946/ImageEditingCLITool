@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Welcome to the Advanced Image Editing CLI Tool.
-This tool is designed to apply custom filters and adjustments to images through a command-line interface (CLI). <br>
-It showcases advanced image processing techniques using convolution and other mathematical operations.
+Welcome to the Advanced Image Editing CLI Tool. This tool is designed to apply custom filters and adjustments<br>
+to images through a command-line interface (CLI). It showcases advanced image processing techniques using convolution<br>
+and other mathematical operations.
 
 ## Features
 
