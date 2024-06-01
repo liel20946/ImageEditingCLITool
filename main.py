@@ -33,6 +33,12 @@ DISPLAY_PARAMETER = "--display"
 SAVE_PARAMETER = "--output"
 
 
+def check_display_method_validity(index):
+    arg_size = len(sys.argv)
+    return (index == arg_size - 1 and sys.argv[index] == DISPLAY_PARAMETER or
+            index == arg_size - 2 and sys.argv[index] == SAVE_PARAMETER)
+
+
 def display_result(modified_array):
     """
     This function displays the image after all the modifiers have been applied.
@@ -118,15 +124,9 @@ def handle_adjustment_parm(index, adjustment_set, modifiers_list):
     return 3
 
 
-def get_modifiers_list():
-    """
-    This function creates a list of modifiers that will be applied to the
-    image. the list is created from the command line arguments.
-    :return: list of modifiers
-    """
+def parse_modifier_args(modifiers_list):
     filter_parameters = filter_factory.get_filters_parameters()
     adjustment_set = adjustment_factory.get_adjustments_set()
-    modifiers_list = []
     i = 4  # start from the first modifier
     arg_size = len(sys.argv)
     while i < arg_size:
@@ -135,26 +135,33 @@ def get_modifiers_list():
         elif sys.argv[i] == ADJUSTMENT_PARAMETER:
             i += handle_adjustment_parm(i, adjustment_set, modifiers_list)
         else:
-            # TODO : must break just for now, need to handle logic differently
-            break
-            # print(WRONG_USAGE)
-            # sys.exit(1)
-    return modifiers_list
+            return i
+    return i
+
+
+def apply_modifiers(modifiers_list, image_array):
+    for modifier in modifiers_list:
+        image_array = modifier.apply(image_array)
+    display_result(image_array)
 
 
 def run_edit_command():
     if len(sys.argv) < 3 or sys.argv[2] != IMAGE_PARAMETER:
         print(WRONG_USAGE)
         return
-    loaded_image = load_image(sys.argv[3])
-    if loaded_image is None:
-        return
-    modified_image = np.array(loaded_image)
 
-    modifiers_list = get_modifiers_list()
-    for modifier in modifiers_list:
-        modified_image = modifier.apply(modified_image)
-    display_result(modified_image)
+    loaded_image = load_image(sys.argv[3])
+    if loaded_image is None: return
+
+    modifiers_list = []
+    index = parse_modifier_args(modifiers_list)
+
+    if not check_display_method_validity(index):
+        print(INVALID_DISPLAY_ARGUMENT)
+        print(WRONG_USAGE)
+        return
+
+    apply_modifiers(modifiers_list, np.array(loaded_image))
 
 
 def run_command():
