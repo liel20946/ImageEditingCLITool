@@ -1,4 +1,4 @@
-# Advanced Image Editing CLI Tool
+# 🌄 Advanced Image Editing CLI Tool 
 
 ## Introduction
 
@@ -17,7 +17,7 @@ processing techniques using convolution and other mathematical operations.
 ### Supported Image Formats
 jpg, jpeg, png
 
-## Getting Started
+## 🏁 Getting Started
 
 ### Prerequisites
 
@@ -129,6 +129,6 @@ some examples of the tool in action, mostly simple filter and adjustments combin
   </div>
 </div>
 
-## Author
+## ✍️ Author
 Liel Azulay
 - you can check out my github profile [here](https://github.com/liel20946)
