@@ -167,28 +167,7 @@ def run_command():
 
 
 def main():
-    # run_command()
-    image = Image.open("example_images/one_dog_original.jpg")
-    arr = np.array(image)
-    edge_detection = filter_factory.create_filter("edge-detection")
-    grey_scale = filter_factory.create_filter("greyscale")
-    blur = filter_factory.create_filter("blur", 12, 12)
-    sharpen = filter_factory.create_filter("sharpen", 0.75)
-
-    brightness = adjustment_factory.create_adjustment("brightness", 50)
-    contrast = adjustment_factory.create_adjustment("contrast", 1.5)
-    saturation = adjustment_factory.create_adjustment("saturation", 1.5)
-    # arr = grey_scale.apply(arr)
-    # arr = sharpen.apply(arr)
-    # arr = grey_scale.apply(arr)
-    arr = edge_detection.apply(arr)
-    # arr = blur.apply(arr)
-
-    # arr = brightness.apply(arr)
-    # arr = contrast.apply(arr)
-    # arr = saturation.apply(arr)
-    new_image = Image.fromarray(np.uint8(arr))
-    new_image.show()
+    run_command()
 
 
 if __name__ == "__main__":
