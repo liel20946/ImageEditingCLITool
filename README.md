@@ -74,7 +74,7 @@ python3 main edit_image --image <path-to-image> [--filter < filter-name> --filte
   - `--adjust saturation <value>`
 
 ## Examples
-left is the original image, right is the processed image:
+some examples of the tool in action, mostly simple filter and adjustments combinations.
 
 ### Saturation and Contrast
 
