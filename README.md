@@ -102,7 +102,7 @@ some examples of the tool in action, mostly simple filter and adjustments combin
   </div>
 </div>
 
-### Greyscale
+### Greyscale and Sharpen
 <div style="display: flex; flex-direction: row; gap: 2%;">
   <div style="text-align: center; width: 40%;">
     <img src="example_images/times_square_original.jpg" alt="original" style="width: 100%;">

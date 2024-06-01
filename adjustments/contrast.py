@@ -20,5 +20,5 @@ class Contrast(BaseAdjustment):
         :return: adjusted image numpy array.
         """
         # TODO: understand how it works
-        return np.uint8(np.clip(128 + self.factor * image_array.astype(
-            np.int16) - self.factor * 128, 0, 255))
+        return np.clip(128 + self.factor * image_array.astype(
+            np.int16) - self.factor * 128, 0, 255)

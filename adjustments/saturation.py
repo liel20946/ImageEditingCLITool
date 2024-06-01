@@ -21,6 +21,8 @@ class Saturation(BaseAdjustment):
                saturation of.
         :return: adjusted image numpy array.
         """
+        if len(image_array.shape) != 3:  # if the image is not colored
+            return image_array
         # TODO: understand how it works
         image = Image.fromarray(image_array, 'RGB')
         hsl_image = image.convert('HSV')

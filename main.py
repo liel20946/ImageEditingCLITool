@@ -39,7 +39,7 @@ def display_result(modified_array):
     :return: None
     """
     # checks last argument to see if the image should be displayed
-    new_image = Image.fromarray(modified_array)
+    new_image = Image.fromarray(np.uint8(modified_array))
     if sys.argv[-1] == DISPLAY_PARAMETER:
         new_image.show()
     elif sys.argv[-2] == SAVE_PARAMETER:
@@ -85,7 +85,8 @@ def handle_filter_parm(index, filter_parameters, modifiers_list):
 
     filter_name = sys.argv[index + 1]
     filter_args = extract_sub_args(filter_parameters[filter_name],
-                                   index + 2, INVALID_FILTER + '\n' + WRONG_USAGE)
+                                   index + 2,
+                                   INVALID_FILTER + '\n' + WRONG_USAGE)
 
     if len(filter_args) != len(filter_parameters[filter_name]):
         print(INVALID_FILTER)
@@ -166,13 +167,7 @@ def run_command():
 
 
 def main():
-    # run_command()
-    image = Image.open("example_images/one_dog_original.jpg")
-    arr = np.array(image)
-    edge_detection = filter_factory.create_filter("edge-detection")
-    arr = edge_detection.apply(arr)
-    new_image = Image.fromarray(arr)
-    new_image.save("example_images/one_dog_processed.jpg")
+    run_command()
 
 
 if __name__ == "__main__":

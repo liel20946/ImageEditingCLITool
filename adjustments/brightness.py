@@ -22,4 +22,4 @@ class Brightness(BaseAdjustment):
         :return: image_array with adjusted brightness.
         """
         adjusted_array = image_array.astype(np.int16) + self.factor
-        return np.uint8(np.clip(adjusted_array, 0, 255))
+        return np.clip(adjusted_array, 0, 255)
