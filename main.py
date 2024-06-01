@@ -33,16 +33,17 @@ DISPLAY_PARAMETER = "--display"
 SAVE_PARAMETER = "--output"
 
 
-def display_result(modified_image):
+def display_result(modified_array):
     """
     This function displays the image after all the modifiers have been applied.
     :return: None
     """
     # checks last argument to see if the image should be displayed
+    new_image = Image.fromarray(modified_array)
     if sys.argv[-1] == DISPLAY_PARAMETER:
-        modified_image.show()
+        new_image.show()
     elif sys.argv[-2] == SAVE_PARAMETER:
-        modified_image.save(sys.argv[-1])
+        new_image.save(sys.argv[-1])
     else:
         print(INVALID_DISPLAY_ARGUMENT)
         print(WRONG_USAGE)
@@ -133,8 +134,10 @@ def get_modifiers_list():
         elif sys.argv[i] == ADJUSTMENT_PARAMETER:
             i += handle_adjustment_parm(i, adjustment_set, modifiers_list)
         else:
-            print(WRONG_USAGE)
-            sys.exit(1)
+            # TODO : must break just for now, need to handle logic differently
+            break
+            # print(WRONG_USAGE)
+            # sys.exit(1)
     return modifiers_list
 
 
@@ -150,7 +153,7 @@ def run_edit_command():
     modifiers_list = get_modifiers_list()
     for modifier in modifiers_list:
         modified_image = modifier.apply(modified_image)
-    display_result(Image.fromarray(modified_image))
+    display_result(modified_image)
 
 
 def run_command():
@@ -163,7 +166,13 @@ def run_command():
 
 
 def main():
-    run_command()
+    # run_command()
+    image = Image.open("example_images/one_dog_original.jpg")
+    arr = np.array(image)
+    edge_detection = filter_factory.create_filter("edge-detection")
+    arr = edge_detection.apply(arr)
+    new_image = Image.fromarray(arr)
+    new_image.save("example_images/one_dog_processed.jpg")
 
 
 if __name__ == "__main__":

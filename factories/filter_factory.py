@@ -2,9 +2,9 @@ import filters
 
 # Constants for the filter types
 BOX_BLUR_TYPE = "blur"
-EDGE_DETECTION_TYPE = "edge_detection"
+EDGE_DETECTION_TYPE = "edge-detection"
 SHARPEN_TYPE = "sharpen"
-GREY_SCALE_TYPE = "grey_scale"
+GREY_SCALE_TYPE = "greyscale"
 
 
 def create_filter(filter_name, *args):
@@ -28,7 +28,7 @@ def create_filter(filter_name, *args):
 
 def get_filters_parameters():
     filters_parameters = {"blur": {"--x", "--y"},
-                          "edge_detection": None,
+                          "edge-detection": {},
                           "sharpen": {"--factor"},
-                          "grey_scale": None}
+                          "greyscale": {}}
     return filters_parameters
