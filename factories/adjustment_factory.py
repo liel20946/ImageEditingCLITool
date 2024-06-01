@@ -21,3 +21,7 @@ def create_adjustment(adjustment_type, *args):
         return adjustments.Contrast(*args)
     else:
         raise ValueError('Invalid adjustment type')
+
+
+def get_adjustments_set():
+    return {BRIGHTNESS_TYPE, SATURATION_TYPE, CONTRAST_TYPE}

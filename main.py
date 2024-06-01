@@ -8,18 +8,29 @@ from factories import adjustment_factory, filter_factory
 # Constants #
 
 # Error messages
-INVALID_COMMAND_MESSAGE = "Invalid command"
-INVALID_FILTER_MESSAGE = "Invalid filter"
-WRONG_USAGE_MESSAGE = ""  # TODO: fill this in
+INVALID_COMMAND = "Invalid Command\n"
+INVALID_FILTER = "Invalid Filter\n"
+INVALID_ADJUSTMENT = "Invalid Adjustment\n"
+INVALID_DISPLAY_ARGUMENT = "Invalid Display Argument\n"
+INVALID_IMAGE_PATH = "Invalid Image Path\n"
+
+# Usage message
+WRONG_USAGE = ("Usage:\n"
+               "edit_image --image <path-to-image> [--filter < "
+               "filter-name> --filter-specific_name < "
+               "filter-specific_value>]\n"
+               "[--adjust <adjustment-name> ‹value>] [--filter < filter-name> "
+               "--filter-specific_name < filter-specific_value>]\n"
+               "...[--display] [--output <output_path>]")
 
 # Commands
 EDIT_COMMAND = "edit_image"
 # Edit command parameters
 IMAGE_PARAMETER = "--image"
 FILTER_PARAMETER = "--filter"
-ADJUSTMENT_PARAMETER = "--adjustment"
+ADJUSTMENT_PARAMETER = "--adjust"
 DISPLAY_PARAMETER = "--display"
-SAVE_PARAMETER = "--out"
+SAVE_PARAMETER = "--output"
 
 
 def display_result(modified_image):
@@ -32,30 +43,111 @@ def display_result(modified_image):
         modified_image.show()
     elif sys.argv[-2] == SAVE_PARAMETER:
         modified_image.save(sys.argv[-1])
+    else:
+        print(INVALID_DISPLAY_ARGUMENT)
+        print(WRONG_USAGE)
 
 
-def create_modifiers_list():
+def extract_sub_args(sub_args, start_index, error_message):
+    """
+    This function gets the arguments for the filter from the command line
+    arguments.
+    :param error_message: the error message to print if the arguments are.
+    :param start_index:  the index of the first argument for the filter in the
+    :param sub_args: the arguments for the filter.
+    line arguments.
+    :return: the arguments for the filter.
+    """
+    args_values = []
+    for i in range(start_index, start_index + 2 * len(sub_args), 2):
+        if sys.argv[i] not in sub_args:
+            print(error_message)  # TODO: change to more appropriate
+            sys.exit(1)
+        args_values.append(float(sys.argv[i + 1]))
+    return args_values
+
+
+def check_filter_validity(index, filter_parameters):
+    arg_size = len(sys.argv)
+    if (index + 1 >= arg_size or sys.argv[index + 1] not in filter_parameters
+            or index + 1 + 2 * len(filter_parameters[sys.argv[index + 1]]) >=
+            arg_size):
+        return False
+    return True
+
+
+def handle_filter_parm(index, filter_parameters, modifiers_list):
+    if not check_filter_validity(index, filter_parameters):
+        print(INVALID_FILTER)
+        print(WRONG_USAGE)
+        sys.exit(1)
+
+    filter_name = sys.argv[index + 1]
+    filter_args = extract_sub_args(filter_parameters[filter_name],
+                                   index + 2, INVALID_FILTER + '\n' + WRONG_USAGE)
+
+    if len(filter_args) != len(filter_parameters[filter_name]):
+        print(INVALID_FILTER)
+        print(WRONG_USAGE)
+        sys.exit(1)
+
+    new_filter = filter_factory.create_filter(filter_name, *filter_args)
+    modifiers_list.append(new_filter)
+    return 2 + 2 * len(filter_parameters[filter_name])
+
+
+def check_adjustment_validity(index, adjustment_set):
+    arg_size = len(sys.argv)
+    if index + 2 >= arg_size or sys.argv[index + 1] not in adjustment_set:
+        return False
+    return True
+
+
+def handle_adjustment_parm(index, adjustment_set, modifiers_list):
+    if not check_adjustment_validity(index, adjustment_set):
+        print(INVALID_ADJUSTMENT)
+        print(WRONG_USAGE)
+        sys.exit(1)
+    adjustment_type, adjustment_val = (sys.argv[index + 1],
+                                       float(sys.argv[index + 2]))
+    curr_adjustment = adjustment_factory.create_adjustment(
+        adjustment_type, adjustment_val)
+    modifiers_list.append(curr_adjustment)
+    return 3
+
+
+def get_modifiers_list():
     """
     This function creates a list of modifiers that will be applied to the
     image. the list is created from the command line arguments.
     :return: list of modifiers
     """
-    pass
+    filter_parameters = filter_factory.get_filters_parameters()
+    adjustment_set = adjustment_factory.get_adjustments_set()
+    modifiers_list = []
+    i = 4  # start from the first modifier
+    arg_size = len(sys.argv)
+    while i < arg_size:
+        if sys.argv[i] == FILTER_PARAMETER:
+            i += handle_filter_parm(i, filter_parameters, modifiers_list)
+        elif sys.argv[i] == ADJUSTMENT_PARAMETER:
+            i += handle_adjustment_parm(i, adjustment_set, modifiers_list)
+        else:
+            print(WRONG_USAGE)
+            sys.exit(1)
+    return modifiers_list
 
 
 def run_edit_command():
     if len(sys.argv) < 3 or sys.argv[2] != IMAGE_PARAMETER:
-        print(WRONG_USAGE_MESSAGE)
+        print(WRONG_USAGE)
         return
     loaded_image = load_image(sys.argv[3])
     if loaded_image is None:
         return
-
-    # create a list of modifiers that will be applied to the image
-    modifiers_list = create_modifiers_list()
-    # convert the image to a numpy array
     modified_image = np.array(loaded_image)
-    # apply the modifiers to the image one after the other
+
+    modifiers_list = get_modifiers_list()
     for modifier in modifiers_list:
         modified_image = modifier.apply(modified_image)
     display_result(Image.fromarray(modified_image))
@@ -65,7 +157,9 @@ def run_command():
     if len(sys.argv) > 1 and sys.argv[1] == EDIT_COMMAND:
         run_edit_command()
     # more commands can be added here
-    print(INVALID_COMMAND_MESSAGE)
+    else:
+        print(INVALID_COMMAND)
+        print(WRONG_USAGE)
 
 
 def main():

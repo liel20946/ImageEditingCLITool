@@ -2,7 +2,7 @@ import sys
 from PIL import Image
 
 # Constants
-FILE_NOT_FOUND_MESSAGE = "File not found"
+INVALID_IMAGE_PATH = "Invalid Image Path"
 
 
 def load_image(image_path):
@@ -15,4 +15,4 @@ def load_image(image_path):
         image = Image.open(image_path)
         return image
     except FileNotFoundError:
-        print(FILE_NOT_FOUND_MESSAGE)
+        print(INVALID_IMAGE_PATH)

@@ -3,7 +3,7 @@ from utils.convolution import convolve_md
 import numpy as np
 
 
-class BoxBlur(BaseFilter):
+class Blur(BaseFilter):
     """
     Filter for applying a box blur to an image.
     """
@@ -13,10 +13,10 @@ class BoxBlur(BaseFilter):
         :param x: x dimension of the kernel matrix.
         :param y: y dimension of the kernel matrix.
         """
-        self.x = x
-        self.y = y
+        self.x = int(x)
+        self.y = int(y)
         # initialize the kernel matrix, normalized 1's matrix
-        self.kernel = np.full((x, y), 1 / (x * y))
+        self.kernel = np.full((self.x, self.y), 1 / (self.x * self.y))
 
     def apply(self, image_array):
         """
