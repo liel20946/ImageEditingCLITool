@@ -1,7 +1,7 @@
 import numpy as np
 
 from filters.base_filter import BaseFilter
-from filters.edge_detection import EdgeDetection
+import factories.filter_factory as filter_factory
 
 # Constants
 RGB_SHAPE_LENGTH = 3
@@ -18,7 +18,7 @@ class Sharpen(BaseFilter):
         :param factor:
         """
         self.factor = factor
-        self.edge_detection = EdgeDetection()
+        self.edge_detection = filter_factory.create_filter('edge-detection')
 
     def apply(self, image_array):
         """
