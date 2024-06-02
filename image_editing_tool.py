@@ -33,6 +33,21 @@ ADJUSTMENT_PARAMETER = "--adjust"
 DISPLAY_PARAMETER = "--display"
 SAVE_PARAMETER = "--output"
 
+# INDEXES
+DISPLAY_IMAGE_INDEX = -1
+SAVE_IMAGE_INDEX = -2
+SAVE_IMAGE_PATH_INDEX = -1
+INPUT_IMAGE_INDEX = 3
+COMMAND_INDEX = 1
+IMAGE_ARGUMENT_INDEX = 2
+MODIFIERS_START_INDEX = 4
+
+# NUMBERS
+VALUES_PER_SUB_ARG = 2
+NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT = 3
+MIN_NUMBER_OF_CLI_ARGS = 1
+MIN_NUMBER_OF_EDIT_ARGS = 3
+
 
 def handle_error(error_message):
     """
@@ -64,10 +79,10 @@ def display_result(modified_array):
     """
     # checks last argument to see if the image should be displayed
     new_image = Image.fromarray(np.uint8(modified_array))
-    if sys.argv[-1] == DISPLAY_PARAMETER:
+    if sys.argv[DISPLAY_IMAGE_INDEX] == DISPLAY_PARAMETER:
         new_image.show()
-    elif sys.argv[-2] == SAVE_PARAMETER:
-        new_image.save(sys.argv[-1])
+    elif sys.argv[SAVE_IMAGE_INDEX] == SAVE_PARAMETER:
+        new_image.save(sys.argv[SAVE_IMAGE_PATH_INDEX])
     else:
         handle_error(INVALID_DISPLAY_ARGUMENT_MSG)
 
@@ -82,7 +97,8 @@ def extract_sub_args(sub_args, start_index, error_message):
     :return: list of sub arguments values.
     """
     args_values = []
-    for i in range(start_index, start_index + 2 * len(sub_args), 2):
+    end_index = start_index + VALUES_PER_SUB_ARG * len(sub_args)
+    for i in range(start_index, end_index, 2):
         if sys.argv[i] not in sub_args:
             handle_error(error_message)
         args_values.append(float(sys.argv[i + 1]))
@@ -98,7 +114,7 @@ def check_filter_validity(index, filter_parameters):
     """
     arg_size = len(sys.argv)
     return not (index + 1 >= arg_size or sys.argv[index + 1]
-                not in filter_parameters or index + 1 + 2 *
+                not in filter_parameters or index + 1 + VALUES_PER_SUB_ARG *
                 len(filter_parameters[sys.argv[index + 1]]) >= arg_size)
 
 
@@ -126,7 +142,7 @@ def handle_filter_parm(index, filter_parameters, modifiers_list):
         handle_error(INVALID_FILTER_TYPE_MSG)
 
     modifiers_list.append(new_filter)
-    return 2 + 2 * len(filter_parameters[filter_name])
+    return 2 + VALUES_PER_SUB_ARG * len(filter_parameters[filter_name])
 
 
 def check_adjustment_validity(index, adjustment_set):
@@ -155,10 +171,10 @@ def handle_adjustment_parm(index, adjustment_set, modifiers_list):
                                        float(sys.argv[index + 2]))
     curr_adjustment = adjustment_factory.create_adjustment(
         adjustment_type, adjustment_val)
-    if curr_adjustment is not None:
+    if curr_adjustment is None:
         handle_error(INVALID_ADJUSTMENT_TYPE_MSG)
     modifiers_list.append(curr_adjustment)
-    return 3
+    return NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT
 
 
 def parse_modifier_args(modifiers_list):
@@ -169,7 +185,7 @@ def parse_modifier_args(modifiers_list):
     """
     filter_parameters = filter_factory.get_filters_parameters()
     adjustment_set = adjustment_factory.get_adjustments_set()
-    i = 4  # start from the first modifier
+    i = MODIFIERS_START_INDEX
     arg_size = len(sys.argv)
     while i < arg_size:
         if sys.argv[i] == FILTER_PARAMETER:
@@ -211,11 +227,13 @@ def run_edit_command():
     Run the edit command, if the arguments are valid.
     :return: None
     """
-    if len(sys.argv) < 3 or sys.argv[2] != IMAGE_PARAMETER:
+    if (len(sys.argv) < MIN_NUMBER_OF_EDIT_ARGS
+            or sys.argv[IMAGE_ARGUMENT_INDEX] != IMAGE_PARAMETER):
         handle_error(INVALID_IMAGE_PARM_MSG)
 
-    loaded_image = load_image(sys.argv[3])
-    if loaded_image is None: return
+    loaded_image = load_image(sys.argv[INPUT_IMAGE_INDEX])
+    if loaded_image is None:
+        return
 
     modifiers_list = []
     index = parse_modifier_args(modifiers_list)
@@ -232,7 +250,8 @@ def run_command():
     Run the given command, from the command line arguments.
     :return: None
     """
-    if len(sys.argv) > 1 and sys.argv[1] == EDIT_COMMAND:
+    if (len(sys.argv) > MIN_NUMBER_OF_CLI_ARGS
+            and sys.argv[COMMAND_INDEX] == EDIT_COMMAND):
         run_edit_command()
     # more commands can be added here
     else:

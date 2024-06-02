@@ -1,9 +1,9 @@
 import adjustments
 
 # Constants for the adjustment types
-BRIGHTNESS_TYPE = 'brightness'
-SATURATION_TYPE = 'saturation'
-CONTRAST_TYPE = 'contrast'
+BRIGHTNESS_TYPE = "brightness"
+SATURATION_TYPE = "saturation"
+CONTRAST_TYPE = "contrast"
 
 
 def create_adjustment(adjustment_type, *args):

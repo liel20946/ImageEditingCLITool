@@ -1,7 +1,7 @@
 import filters
 
 # Constants for the filter types
-BOX_BLUR_TYPE = "blur"
+BLUR_TYPE = "blur"
 EDGE_DETECTION_TYPE = "edge-detection"
 SHARPEN_TYPE = "sharpen"
 GREY_SCALE_TYPE = "greyscale"
@@ -14,7 +14,7 @@ def create_filter(filter_name, *args):
     :param args: arguments to pass to the filter constructor.
     :return: the created filter object.
     """
-    if filter_name == BOX_BLUR_TYPE:
+    if filter_name == BLUR_TYPE:
         return filters.Blur(*args)
     elif filter_name == EDGE_DETECTION_TYPE:
         return filters.EdgeDetection()
@@ -25,8 +25,8 @@ def create_filter(filter_name, *args):
 
 
 def get_filters_parameters():
-    filters_parameters = {"blur": {"--x", "--y"},
-                          "edge-detection": {},
-                          "sharpen": {"--factor"},
-                          "greyscale": {}}
+    filters_parameters = {BLUR_TYPE: {"--x", "--y"},
+                          EDGE_DETECTION_TYPE: {},
+                          SHARPEN_TYPE: {"--factor"},
+                          GREY_SCALE_TYPE: {}}
     return filters_parameters
