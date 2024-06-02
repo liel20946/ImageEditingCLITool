@@ -21,7 +21,7 @@ class EdgeDetection(BaseFilter):
 
     def apply(self, image_array):
         """
-        Apply the edge detection filter to an image.
+        Apply the edge detection filter to an image, using sobel operator.
         :param image_array: numpy array of the image to apply the filter to.
         :return: image_array with the edge detection filter applied.
         """
@@ -32,5 +32,6 @@ class EdgeDetection(BaseFilter):
 
         edges = np.sqrt(np.square(vertical_edges) +
                         np.square(horizontal_edges))
+        # normalize the edges to increase visibility
         edges = (edges / np.max(edges)) * RGB_MAX_VALUE
         return edges
