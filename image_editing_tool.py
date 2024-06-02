@@ -58,7 +58,7 @@ MODIFIERS_START_INDEX = 4
 VALUES_PER_SUB_ARG = 2
 NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT = 3
 MIN_NUMBER_OF_CLI_ARGS = 2
-MIN_NUMBER_OF_EDIT_ARGS = 3
+MIN_NUMBER_OF_EDIT_ARGS = 4
 
 
 def handle_error(error_message):
@@ -112,7 +112,7 @@ def extract_sub_args(sub_args, start_index, error_message):
         if sys.argv[i] not in sub_args or i+1 >= end_index:
             handle_error(error_message)
         if not sys.argv[i + 1].replace('.', '', 1).isdigit():
-            handle_error(INVALID_ARG_FOR_ADJUSTMENT)
+            handle_error(error_message)
         args_values.append(float(sys.argv[i + 1]))
     return args_values
 
