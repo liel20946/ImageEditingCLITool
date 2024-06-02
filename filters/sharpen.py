@@ -1,10 +1,8 @@
 import numpy as np
 
 from filters.base_filter import BaseFilter
+from utils.colors import RGB_SHAPE_LENGTH, RGB_MIN_VALUE, RGB_MAX_VALUE
 import factories.filter_factory as filter_factory
-
-# Constants
-RGB_SHAPE_LENGTH = 3
 
 
 class Sharpen(BaseFilter):
@@ -31,4 +29,4 @@ class Sharpen(BaseFilter):
         if len(image_array.shape) == RGB_SHAPE_LENGTH:
             edges = edges[:, :, None].repeat(image_array.shape[2], axis=2)
         sharpened = image_array.astype(np.int16) + self.factor * edges
-        return np.clip(sharpened, 0, 255)
+        return np.clip(sharpened, RGB_MIN_VALUE, RGB_MAX_VALUE)

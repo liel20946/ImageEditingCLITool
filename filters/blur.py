@@ -1,9 +1,7 @@
 from filters.base_filter import BaseFilter
 from utils.convolution import convolve_md, convolve_2d
+from utils.colors import GREYSCALE_SHAPE_LENGTH
 import numpy as np
-
-# Constants
-GREYSCALE_SHAPE_LENGTH = 2
 
 
 class Blur(BaseFilter):

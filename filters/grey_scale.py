@@ -1,14 +1,7 @@
 from filters.base_filter import BaseFilter
+from utils.colors import (GREYSCALE_SHAPE_LENGTH, RGB_SHAPE_LENGTH, RED_WEIGHT,
+                          GREEN_WEIGHT, BLUE_WEIGHT)
 import numpy as np
-
-# Constants
-GREYSCALE_SHAPE_LENGTH = 2
-RGB_SHAPE_LENGTH = 3
-
-# weights for RGB to greyscale conversion
-RED_WEIGHT = 0.2989
-GREEN_WEIGHT = 0.5870
-BLUE_WEIGHT = 0.1140
 
 
 class GreyScale(BaseFilter):

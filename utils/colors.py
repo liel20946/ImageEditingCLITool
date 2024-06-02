@@ -1,5 +1,17 @@
 import numpy as np
 
+# Constants
+RGB_SHAPE_LENGTH = 3
+RGBA_CHANNEL_SIZE = 4
+GREYSCALE_SHAPE_LENGTH = 2
+# weights for RGB to greyscale conversion
+RED_WEIGHT = 0.2989
+GREEN_WEIGHT = 0.5870
+BLUE_WEIGHT = 0.1140
+# rgb range
+RGB_MIN_VALUE = 0
+RGB_MAX_VALUE = 255
+
 
 def rgb_to_hsv(rgb):
     """ convert RGB to HSV color space

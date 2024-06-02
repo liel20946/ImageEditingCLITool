@@ -3,6 +3,7 @@ import numpy as np
 from filters.base_filter import BaseFilter
 import factories.filter_factory as filter_factory
 from utils.convolution import convolve_2d
+from utils.colors import RGB_MAX_VALUE
 
 
 class EdgeDetection(BaseFilter):
@@ -31,5 +32,5 @@ class EdgeDetection(BaseFilter):
         horizontal_edges = convolve_2d(greyed_image, self.horizontal_kernel)
 
         edges = np.sqrt(np.square(vertical_edges) + np.square(horizontal_edges))
-        edges = (edges / np.max(edges)) * 255
+        edges = (edges / np.max(edges)) * RGB_MAX_VALUE
         return edges

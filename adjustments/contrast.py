@@ -1,5 +1,6 @@
-from adjustments.base_adjustment import BaseAdjustment
 import numpy as np
+from adjustments.base_adjustment import BaseAdjustment
+from utils.colors import RGB_MIN_VALUE, RGB_MAX_VALUE
 
 
 class Contrast(BaseAdjustment):
@@ -21,4 +22,4 @@ class Contrast(BaseAdjustment):
         """
         # TODO: understand how it works
         return np.clip(128 + self.factor * image_array.astype(
-            np.int16) - self.factor * 128, 0, 255)
+            np.int16) - self.factor * 128, RGB_MIN_VALUE, RGB_MAX_VALUE)
