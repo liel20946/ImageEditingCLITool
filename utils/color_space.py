@@ -1,0 +1,57 @@
+import numpy as np
+
+
+def rgb_to_hsv(rgb):
+    """ convert RGB to HSV color space
+    :param rgb: np.ndarray
+    :return: np.ndarray
+    """
+
+    rgb = rgb.astype('float')
+    max_v = np.amax(rgb, axis=2)
+    max_c = np.argmax(rgb, axis=2)
+    min_v = np.amin(rgb, axis=2)
+    min_c = np.argmin(rgb, axis=2)
+
+    hsv = np.zeros(rgb.shape, dtype='float')
+    hsv[max_c == min_c, 0] = np.zeros(hsv[max_c == min_c, 0].shape)
+    hsv[max_c == 0, 0] = (((rgb[..., 1] - rgb[..., 2]) * 60.0 / (max_v - min_v + np.spacing(1))) % 360.0)[max_c == 0]
+    hsv[max_c == 1, 0] = (((rgb[..., 2] - rgb[..., 0]) * 60.0 / (max_v - min_v + np.spacing(1))) + 120.0)[max_c == 1]
+    hsv[max_c == 2, 0] = (((rgb[..., 0] - rgb[..., 1]) * 60.0 / (max_v - min_v + np.spacing(1))) + 240.0)[max_c == 2]
+    hsv[max_v == 0, 1] = np.zeros(hsv[max_v == 0, 1].shape)
+    hsv[max_v != 0, 1] = (1 - min_v / (max_v + np.spacing(1)))[max_v != 0]
+    hsv[..., 2] = max_v
+
+    return hsv
+
+
+def hsv_to_rgb(hsv):
+    """ convert HSV to RGB color space
+
+    :param hsv: np.ndarray
+    :return: np.ndarray
+    """
+    hi = np.floor(hsv[..., 0] / 60.0) % 6
+    hi = hi.astype('uint8')
+    v = hsv[..., 2].astype('float')
+    f = (hsv[..., 0] / 60.0) - np.floor(hsv[..., 0] / 60.0)
+    p = v * (1.0 - hsv[..., 1])
+    q = v * (1.0 - (f * hsv[..., 1]))
+    t = v * (1.0 - ((1.0 - f) * hsv[..., 1]))
+
+    rgb = np.zeros(hsv.shape)
+    rgb[hi == 0, :] = np.dstack((v, t, p))[hi == 0, :]
+    rgb[hi == 1, :] = np.dstack((q, v, p))[hi == 1, :]
+    rgb[hi == 2, :] = np.dstack((p, v, t))[hi == 2, :]
+    rgb[hi == 3, :] = np.dstack((p, q, v))[hi == 3, :]
+    rgb[hi == 4, :] = np.dstack((t, p, v))[hi == 4, :]
+    rgb[hi == 5, :] = np.dstack((v, p, q))[hi == 5, :]
+
+    return rgb
+
+
+
+
+
+
+

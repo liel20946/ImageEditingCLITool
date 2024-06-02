@@ -1,6 +1,7 @@
 from adjustments.base_adjustment import BaseAdjustment
 from PIL import Image
 import numpy as np
+import utils.color_space as cs
 
 # Constants
 RGB_SHAPE_LENGTH = 3
@@ -26,7 +27,6 @@ class Saturation(BaseAdjustment):
         :return: adjusted image numpy array.
         """
         # TODO: understand how it works
-
         if len(image_array.shape) != RGB_SHAPE_LENGTH:
             return image_array
         is_rgba = image_array.shape[2] == RGBA_CHANNEL_SIZE
@@ -34,17 +34,15 @@ class Saturation(BaseAdjustment):
         # Extract RGB channels and alpha channel (if present)
         rgb_image = image_array[..., :RGB_SHAPE_LENGTH]
         alpha_channel = image_array[..., RGB_SHAPE_LENGTH:] if is_rgba else None
-        # Convert the RGB image to PIL image
-        image = Image.fromarray(rgb_image, 'RGB')
 
         # Convert the RGB image to HSV
-        hsl_image = image.convert('HSV')
-        hsl_array = np.array(hsl_image)
+        hsv_array = cs.rgb_to_hsv(rgb_image)
 
         # Adjust the saturation channel
-        hsl_array[..., 1] = np.clip(hsl_array[..., 1] * self.factor, 0, 255)
-        # Convert the adjusted HSV image back to RGB
-        adjusted_image = Image.fromarray(hsl_array, 'HSV').convert('RGB')
+        hsv_array[..., 1] = np.clip(hsv_array[..., 1] * self.factor, 0, 255)
+
+        adjusted_image = cs.hsv_to_rgb(hsv_array)
+        adjusted_image = np.clip(adjusted_image, 0, 255)
 
         if is_rgba:
             # Combine the adjusted RGB image with the alpha channel
