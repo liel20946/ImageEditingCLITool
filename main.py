@@ -2,7 +2,6 @@ import sys
 import numpy as np
 from PIL import Image
 
-from utils import load_image
 from factories import adjustment_factory, filter_factory
 
 # Constants #
@@ -143,6 +142,20 @@ def apply_modifiers(modifiers_list, image_array):
     for modifier in modifiers_list:
         image_array = modifier.apply(image_array)
     display_result(image_array)
+
+
+def load_image(image_path):
+    """
+    Load an image from a file path.
+    :param image_path: path to the image file.
+    :return: the loaded image if the path is valid, None otherwise.
+    """
+    try:
+        image = Image.open(image_path)
+        return image
+    except FileNotFoundError:
+        print(INVALID_IMAGE_PATH)
+        return None
 
 
 def run_edit_command():

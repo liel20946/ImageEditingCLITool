@@ -1,2 +1,2 @@
 from .convolution import convolve_md, convolve_2d
-from .image_loader import load_image
+from .color_space import rgb_to_hsv, hsv_to_rgb
