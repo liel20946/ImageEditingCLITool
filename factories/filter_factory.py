@@ -22,8 +22,6 @@ def create_filter(filter_name, *args):
         return filters.Sharpen(*args)
     elif filter_name == GREY_SCALE_TYPE:
         return filters.GreyScale()
-    else:
-        raise ValueError("Invalid filter type")
 
 
 def get_filters_parameters():

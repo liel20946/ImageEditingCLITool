@@ -35,7 +35,7 @@ by running the following command:
 To use the CLI tool, run the following command:
 
 ```
-python3 main edit_image --image <path-to-image> [--filter < filter-name> --filter-specific_name < filter-specific_value>] <br>
+python3 image_editing_tool.py edit_image --image <path-to-image> [--filter < filter-name> --filter-specific_name < filter-specific_value>] <br>
 [--adjust <adjustment-name> ‹value>] [--filter < filter-name> --filter-specific_name < filter-specific_value>] <br>
 ...[--display] [--output <output_path>]
 ```
@@ -44,17 +44,17 @@ python3 main edit_image --image <path-to-image> [--filter < filter-name> --filte
 
 - Apply a box blur filter:
   ```
-  python3 main edit_image.py --image path/to/image.png --filter blur --x 5 --y 5
+  python3 image_editing_tool.py edit_image.py --image path/to/image.png --filter blur --x 5 --y 5
   ```
 
 - Apply edge detection:
   ```
-  python3 main edit_image.py --image path/to/image.png --filter edge-detection
+  python3 image_editing_tool.py edit_image --image path/to/image.png --filter edge-detection
   ```
 
 - Adjust brightness and apply a sharpen filter:
   ```
-  python3 main edit_image.py --image path/to/image.png --adjust brightness 20 --filter sharpen --magnitude 2
+  python3 image_editing_tool.py edit_image --image path/to/image.png --adjust brightness 20 --filter sharpen --factor 2
   ```
 
 ## Filters
@@ -64,7 +64,7 @@ python3 main edit_image --image <path-to-image> [--filter < filter-name> --filte
 - **Edge Detection**:
   - `--filter edge-detection`
 - **Sharpen**:
-  - `--filter sharpen --magnitude <value>`
+  - `--filter sharpen --factor <value>`
 - **Grayscale (extra!)**:
   - `--filter grayscale`
 
