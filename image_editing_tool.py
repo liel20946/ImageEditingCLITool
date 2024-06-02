@@ -6,14 +6,26 @@ from factories import adjustment_factory, filter_factory
 # Constants #
 
 # Error messages
-INVALID_COMMAND_MSG = "Invalid Command\n"
-INVALID_FILTER_MSG = "Invalid Filter\n"
-INVALID_ADJUSTMENT_MSG = "Invalid Adjustment\n"
-INVALID_DISPLAY_ARGUMENT_MSG = "Invalid Display Argument\n"
-INVALID_IMAGE_PATH_MSG = "Invalid Image Path\n"
-INVALID_IMAGE_PARM_MSG = "Invalid Image Parameter\n"
-INVALID_FILTER_TYPE_MSG = "Invalid Filter Type\n"
-INVALID_ADJUSTMENT_TYPE_MSG = "Invalid Adjustment Type\n"
+INVALID_NUMBER_OF_ARGS = "you have entered an invalid number of arguments"
+INVALID_COMMAND_MSG = "the entered command is not supported\n"
+
+
+INVALID_DISPLAY_ARGUMENT_MSG = ("display or save argument not found in the"
+                                " correct position\n")
+INVALID_IMAGE_PATH_MSG = "couldn't open image, path is invalid\n"
+INVALID_MIN_ARGS_FOR_EDIT_MSG = "edit command need at least 2 parameters\n"
+INVALID_IMAGE_PARM_MSG = "image parameter is not in the correct format\n"
+
+
+INVALID_ARG_FOR_ADJUSTMENT = "invalid argument for adjustment\n"
+MISSING_ADJUSTMENT_ARGUMENT_MSG = "missing adjustment arguments\n"
+INVALID_ADJUSTMENT_TYPE_MSG = " is an invalid adjustment type\n"
+
+INVALID_FILTER_TYPE_MSG = "invalid filter type\n"
+MISSING_FILTER_ARGUMENT_MSG = "missing filter arguments\n"
+INVALID_FILTER_ARGUMENT_MSG = "filter arguments are not valid\n"
+INVALID_NUMBER_OF_ARGS_FOR_FILTER = "invalid number of arguments for filter\n"
+
 
 # Usage message
 WRONG_USAGE = ("Usage:\n"
@@ -45,7 +57,7 @@ MODIFIERS_START_INDEX = 4
 # NUMBERS
 VALUES_PER_SUB_ARG = 2
 NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT = 3
-MIN_NUMBER_OF_CLI_ARGS = 1
+MIN_NUMBER_OF_CLI_ARGS = 2
 MIN_NUMBER_OF_EDIT_ARGS = 3
 
 
@@ -83,8 +95,6 @@ def display_result(modified_array):
         new_image.show()
     elif sys.argv[SAVE_IMAGE_INDEX] == SAVE_PARAMETER:
         new_image.save(sys.argv[SAVE_IMAGE_PATH_INDEX])
-    else:
-        handle_error(INVALID_DISPLAY_ARGUMENT_MSG)
 
 
 def extract_sub_args(sub_args, start_index, error_message):
@@ -99,8 +109,10 @@ def extract_sub_args(sub_args, start_index, error_message):
     args_values = []
     end_index = start_index + VALUES_PER_SUB_ARG * len(sub_args)
     for i in range(start_index, end_index, 2):
-        if sys.argv[i] not in sub_args:
+        if sys.argv[i] not in sub_args or i+1 >= end_index:
             handle_error(error_message)
+        if not sys.argv[i + 1].replace('.', '', 1).isdigit():
+            handle_error(INVALID_ARG_FOR_ADJUSTMENT)
         args_values.append(float(sys.argv[i + 1]))
     return args_values
 
@@ -110,12 +122,16 @@ def check_filter_validity(index, filter_parameters):
     Check if the filter parameters are valid.
     :param index: index of the filter name in the command line arguments.
     :param filter_parameters: dictionary of filter parameters.
-    :return: True if the filter is valid, False otherwise.
+    :return: None
     """
     arg_size = len(sys.argv)
-    return not (index + 1 >= arg_size or sys.argv[index + 1]
-                not in filter_parameters or index + 1 + VALUES_PER_SUB_ARG *
-                len(filter_parameters[sys.argv[index + 1]]) >= arg_size)
+    if index + 1 >= arg_size:
+        handle_error(MISSING_FILTER_ARGUMENT_MSG)
+    if sys.argv[index + 1] not in filter_parameters:
+        handle_error(INVALID_FILTER_TYPE_MSG)
+    if (index + 1 + VALUES_PER_SUB_ARG *
+            len(filter_parameters[sys.argv[index + 1]]) >= arg_size):
+        handle_error(MISSING_FILTER_ARGUMENT_MSG)
 
 
 def handle_filter_parm(index, filter_parameters, modifiers_list):
@@ -126,16 +142,13 @@ def handle_filter_parm(index, filter_parameters, modifiers_list):
     :param modifiers_list: list of modifiers to apply to the image.
     :return: the index of the current argument, after parsing the filter
     """
-    if not check_filter_validity(index, filter_parameters):
-        handle_error(INVALID_FILTER_MSG)
-
+    check_filter_validity(index, filter_parameters)
     filter_name = sys.argv[index + 1]
     filter_args = extract_sub_args(filter_parameters[filter_name],
-                                   index + 2,
-                                   INVALID_FILTER_MSG + '\n' + WRONG_USAGE)
+                                   index + 2, INVALID_FILTER_ARGUMENT_MSG)
 
     if len(filter_args) != len(filter_parameters[filter_name]):
-        handle_error(INVALID_FILTER_MSG)
+        handle_error(INVALID_NUMBER_OF_ARGS_FOR_FILTER)
 
     new_filter = filter_factory.create_filter(filter_name, *filter_args)
     if new_filter is None:
@@ -145,34 +158,33 @@ def handle_filter_parm(index, filter_parameters, modifiers_list):
     return 2 + VALUES_PER_SUB_ARG * len(filter_parameters[filter_name])
 
 
-def check_adjustment_validity(index, adjustment_set):
+def check_adjustment_validity(index):
     """
     Check if the adjustment parameters are valid.
     :param index: index of the adjustment name in the command line arguments.
-    :param adjustment_set: set of adjustment parameters.
-    :return: True if the adjustment is valid, False otherwise.
+    :return: None
     """
     arg_size = len(sys.argv)
-    return not (index + 2 >= arg_size or sys.argv[index + 1]
-                not in adjustment_set)
+    if index + 2 >= arg_size:
+        handle_error(MISSING_ADJUSTMENT_ARGUMENT_MSG)
+    if not sys.argv[index + 2].replace('.', '', 1).isdigit():
+        handle_error(INVALID_ARG_FOR_ADJUSTMENT)
 
 
-def handle_adjustment_parm(index, adjustment_set, modifiers_list):
+def handle_adjustment_parm(index, modifiers_list):
     """
     Handle parsing the adjustment parameters.
     :param index: index of current command line argument.
-    :param adjustment_set: set of adjustment parameters.
     :param modifiers_list: list of modifiers to apply to the image.
     :return: the index of the current argument, after parsing the adjustment.
     """
-    if not check_adjustment_validity(index, adjustment_set):
-        handle_error(INVALID_ADJUSTMENT_MSG)
-    adjustment_type, adjustment_val = (sys.argv[index + 1],
+    check_adjustment_validity(index)
+    adjustment_name, adjustment_val = (sys.argv[index + 1],
                                        float(sys.argv[index + 2]))
     curr_adjustment = adjustment_factory.create_adjustment(
-        adjustment_type, adjustment_val)
+        adjustment_name, adjustment_val)
     if curr_adjustment is None:
-        handle_error(INVALID_ADJUSTMENT_TYPE_MSG)
+        handle_error(adjustment_name + INVALID_ADJUSTMENT_TYPE_MSG)
     modifiers_list.append(curr_adjustment)
     return NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT
 
@@ -184,16 +196,15 @@ def parse_modifier_args(modifiers_list):
     :return: the index of the current argument, after parsing the modifiers.
     """
     filter_parameters = filter_factory.get_filters_parameters()
-    adjustment_set = adjustment_factory.get_adjustments_set()
     i = MODIFIERS_START_INDEX
     arg_size = len(sys.argv)
     while i < arg_size:
         if sys.argv[i] == FILTER_PARAMETER:
             i += handle_filter_parm(i, filter_parameters, modifiers_list)
         elif sys.argv[i] == ADJUSTMENT_PARAMETER:
-            i += handle_adjustment_parm(i, adjustment_set, modifiers_list)
+            i += handle_adjustment_parm(i, modifiers_list)
         else:
-            return i
+            break
     return i
 
 
@@ -227,14 +238,12 @@ def run_edit_command():
     Run the edit command, if the arguments are valid.
     :return: None
     """
-    if (len(sys.argv) < MIN_NUMBER_OF_EDIT_ARGS
-            or sys.argv[IMAGE_ARGUMENT_INDEX] != IMAGE_PARAMETER):
+    if len(sys.argv) < MIN_NUMBER_OF_EDIT_ARGS:
+        handle_error(INVALID_MIN_ARGS_FOR_EDIT_MSG)
+    if sys.argv[IMAGE_ARGUMENT_INDEX] != IMAGE_PARAMETER:
         handle_error(INVALID_IMAGE_PARM_MSG)
 
     loaded_image = load_image(sys.argv[INPUT_IMAGE_INDEX])
-    if loaded_image is None:
-        return
-
     modifiers_list = []
     index = parse_modifier_args(modifiers_list)
 
@@ -250,8 +259,9 @@ def run_command():
     Run the given command, from the command line arguments.
     :return: None
     """
-    if (len(sys.argv) > MIN_NUMBER_OF_CLI_ARGS
-            and sys.argv[COMMAND_INDEX] == EDIT_COMMAND):
+    if len(sys.argv) < MIN_NUMBER_OF_CLI_ARGS:
+        handle_error(INVALID_NUMBER_OF_ARGS)
+    if sys.argv[COMMAND_INDEX] == EDIT_COMMAND:
         run_edit_command()
     # more commands can be added here
     else:

@@ -19,7 +19,3 @@ def create_adjustment(adjustment_type, *args):
         return adjustments.Saturation(*args)
     elif adjustment_type == CONTRAST_TYPE:
         return adjustments.Contrast(*args)
-
-
-def get_adjustments_set():
-    return {BRIGHTNESS_TYPE, SATURATION_TYPE, CONTRAST_TYPE}
