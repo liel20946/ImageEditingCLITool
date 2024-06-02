@@ -1,7 +1,8 @@
 import numpy as np
 
 from filters.base_filter import BaseFilter
-from utils.colors import RGB_SHAPE_LENGTH, RGB_MIN_VALUE, RGB_MAX_VALUE
+from utils.colors import RGB_SHAPE_LENGTH, RGB_MIN_VALUE, RGB_MAX_VALUE, \
+    CHANNEL_SIZE_INDEX
 import factories.filter_factory as filter_factory
 
 
@@ -24,9 +25,9 @@ class Sharpen(BaseFilter):
         :param image_array:
         :return:
         """
-        # TODO: understand how this works
         edges = self.edge_detection.apply(image_array)
         if len(image_array.shape) == RGB_SHAPE_LENGTH:
-            edges = edges[:, :, None].repeat(image_array.shape[2], axis=2)
+            num_channels = image_array.shape[CHANNEL_SIZE_INDEX]
+            edges = edges[:, :, None].repeat(num_channels, axis=2)
         sharpened = image_array.astype(np.int16) + self.factor * edges
         return np.clip(sharpened, RGB_MIN_VALUE, RGB_MAX_VALUE)

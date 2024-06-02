@@ -11,6 +11,9 @@ BLUE_WEIGHT = 0.1140
 # rgb range
 RGB_MIN_VALUE = 0
 RGB_MAX_VALUE = 255
+RGB_MIDDLE_VALUE = 128
+# Indexes
+CHANNEL_SIZE_INDEX = 2
 
 
 def rgb_to_hsv(rgb):

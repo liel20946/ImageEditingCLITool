@@ -3,8 +3,9 @@
 ## 👋 Introduction
 
 Welcome to the Advanced Image Editing CLI Tool. This tool is designed to apply custom filters <br> 
-and adjustments to images through a command-line interface (CLI). It showcases advanced image <br>
-processing techniques using convolution and other mathematical operations.
+and adjustments to images through a command-line interface (CLI). It showcases image <br>
+processing techniques using convolution and other mathematical operations. The image <br>
+processing algorithms are implemented from scratch.
 
 ## Features
 
@@ -35,8 +36,10 @@ by running the following command:
 To use the CLI tool, run the following command:
 
 ```
-python3 image_editing_tool.py edit_image --image <path-to-image> [--filter < filter-name> --filter-specific_name < filter-specific_value>] <br>
-[--adjust <adjustment-name> ‹value>] [--filter < filter-name> --filter-specific_name < filter-specific_value>] <br>
+python3 image_editing_tool.py edit_image --image <path-to-image> 
+[--filter < filter-name> --filter-specific_name < filter-specific_value>]
+[--adjust <adjustment-name> ‹value>] 
+[--filter < filter-name> --filter-specific_name < filter-specific_value>]
 ...[--display] [--output <output_path>]
 ```
 
@@ -44,17 +47,17 @@ python3 image_editing_tool.py edit_image --image <path-to-image> [--filter < fil
 
 - Apply a box blur filter:
   ```
-  python3 image_editing_tool.py edit_image.py --image path/to/image.png --filter blur --x 5 --y 5
+  python3 image_editing_tool.py edit_image.py --image path/to/image.png --filter blur --x 5 --y 5 --display
   ```
 
 - Apply edge detection:
   ```
-  python3 image_editing_tool.py edit_image --image path/to/image.png --filter edge-detection
+  python3 image_editing_tool.py edit_image --image path/to/image.png --filter edge-detection --display
   ```
 
 - Adjust brightness and apply a sharpen filter:
   ```
-  python3 image_editing_tool.py edit_image --image path/to/image.png --adjust brightness 20 --filter sharpen --factor 2
+  python3 image_editing_tool.py edit_image --image path/to/image.png --adjust brightness 20 --filter sharpen --factor 2 --display
   ```
 
 ## Filters
@@ -65,7 +68,7 @@ python3 image_editing_tool.py edit_image --image <path-to-image> [--filter < fil
   - `--filter edge-detection`
 - **Sharpen**:
   - `--filter sharpen --factor <value>`
-- **Grayscale (extra!)**:
+- **Grayscale (<span style="color:green;">extra!)**:
   - `--filter grayscale`
 
 ## Adjustments

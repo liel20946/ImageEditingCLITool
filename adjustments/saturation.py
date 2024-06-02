@@ -1,6 +1,6 @@
 from adjustments.base_adjustment import BaseAdjustment
 from utils.colors import (RGB_SHAPE_LENGTH, RGBA_CHANNEL_SIZE,
-                          RGB_MIN_VALUE, RGB_MAX_VALUE)
+                          CHANNEL_SIZE_INDEX, RGB_MIN_VALUE, RGB_MAX_VALUE)
 import numpy as np
 import utils.colors as cs
 
@@ -23,10 +23,9 @@ class Saturation(BaseAdjustment):
                saturation of.
         :return: adjusted image numpy array.
         """
-        # TODO: understand how it works
         if len(image_array.shape) != RGB_SHAPE_LENGTH:
             return image_array
-        is_rgba = image_array.shape[2] == RGBA_CHANNEL_SIZE
+        is_rgba = image_array.shape[CHANNEL_SIZE_INDEX] == RGBA_CHANNEL_SIZE
 
         # Extract RGB channels and alpha channel (if present)
         rgb_image = image_array[..., :RGB_SHAPE_LENGTH]

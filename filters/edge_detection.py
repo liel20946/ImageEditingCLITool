@@ -25,12 +25,12 @@ class EdgeDetection(BaseFilter):
         :param image_array: numpy array of the image to apply the filter to.
         :return: image_array with the edge detection filter applied.
         """
-
         greyed_image = self.grey_scale_filter.apply(image_array)
 
         vertical_edges = convolve_2d(greyed_image, self.vertical_kernel)
         horizontal_edges = convolve_2d(greyed_image, self.horizontal_kernel)
 
-        edges = np.sqrt(np.square(vertical_edges) + np.square(horizontal_edges))
+        edges = np.sqrt(np.square(vertical_edges) +
+                        np.square(horizontal_edges))
         edges = (edges / np.max(edges)) * RGB_MAX_VALUE
         return edges

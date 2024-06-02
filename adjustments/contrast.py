@@ -1,6 +1,6 @@
 import numpy as np
 from adjustments.base_adjustment import BaseAdjustment
-from utils.colors import RGB_MIN_VALUE, RGB_MAX_VALUE
+from utils.colors import RGB_MIN_VALUE, RGB_MAX_VALUE, RGB_MIDDLE_VALUE
 
 
 class Contrast(BaseAdjustment):
@@ -20,6 +20,6 @@ class Contrast(BaseAdjustment):
         :param image_array: numpy array of the image to adjust the contrast of.
         :return: adjusted image numpy array.
         """
-        # TODO: understand how it works
-        return np.clip(128 + self.factor * image_array.astype(
-            np.int16) - self.factor * 128, RGB_MIN_VALUE, RGB_MAX_VALUE)
+        adjusted_image = (RGB_MIDDLE_VALUE + self.factor *
+                          (image_array.astype(np.int16) - RGB_MIDDLE_VALUE))
+        return np.clip(adjusted_image, RGB_MIN_VALUE, RGB_MAX_VALUE)
