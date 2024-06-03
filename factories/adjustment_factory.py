@@ -1,4 +1,5 @@
 import adjustments
+from utils.parameter_check import check_one_positive_float
 
 # Constants for the adjustment types
 BRIGHTNESS_TYPE = "brightness"
@@ -14,8 +15,14 @@ def create_adjustment(adjustment_type, *args):
     :return: the created adjustment object.
     """
     if adjustment_type == BRIGHTNESS_TYPE:
-        return adjustments.Brightness(*args)
+        if not check_one_positive_float(*args):
+            return None
+        return adjustments.Brightness(float(args[0]))
     elif adjustment_type == SATURATION_TYPE:
-        return adjustments.Saturation(*args)
+        if not check_one_positive_float(*args):
+            return None
+        return adjustments.Saturation(float(args[0]))
     elif adjustment_type == CONTRAST_TYPE:
-        return adjustments.Contrast(*args)
+        if not check_one_positive_float(*args):
+            return None
+        return adjustments.Contrast(float(args[0]))

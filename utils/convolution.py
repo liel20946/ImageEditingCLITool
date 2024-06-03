@@ -25,9 +25,9 @@ def convolve_md(image_array, kernel):
     for c in range(channels):
         for i in range(image_height):
             for j in range(image_width):
-                convolved_image[i, j, c] = np.sum(
-                    padded_image[i:i + kernel_height,
-                    j:j + kernel_width, c] * kernel)
+                section = padded_image[i:i + kernel_height,
+                          j:j + kernel_width, c]
+                convolved_image[i, j, c] = np.sum(section * kernel)
     return convolved_image
 
 
@@ -54,6 +54,6 @@ def convolve_2d(image_array, kernel):
 
     for i in range(image_height):
         for j in range(image_width):
-            convolved_image[i, j] = np.sum(
-                padded_image[i:i + kernel_height, j:j + kernel_width] * kernel)
+            section = padded_image[i:i + kernel_height, j:j + kernel_width]
+            convolved_image[i, j] = np.sum(section * kernel)
     return convolved_image

@@ -14,7 +14,7 @@ class Saturation(BaseAdjustment):
         Constructor for the Saturation class.
         :param factor: the factor to adjust the saturation by.
         """
-        self.factor = float(factor)
+        self.factor = factor
 
     def apply(self, image_array):
         """
@@ -27,14 +27,11 @@ class Saturation(BaseAdjustment):
             return image_array
         is_rgba = image_array.shape[CHANNEL_SIZE_INDEX] == RGBA_CHANNEL_SIZE
 
-        # Extract RGB channels and alpha channel (if present)
         rgb_image = image_array[..., :RGB_SHAPE_LENGTH]
-        alpha_channel = image_array[..., RGB_SHAPE_LENGTH:] if is_rgba else None
+        a_channel = image_array[..., RGB_SHAPE_LENGTH:] if is_rgba else None
 
-        # Convert the RGB image to HSV
         hsv_array = cs.rgb_to_hsv(rgb_image)
 
-        # Adjust the saturation channel
         hsv_array[..., 1] = np.clip(hsv_array[..., 1] * self.factor,
                                     RGB_MIN_VALUE, RGB_MAX_VALUE)
 
@@ -42,8 +39,7 @@ class Saturation(BaseAdjustment):
         adjusted_image = np.clip(adjusted_image, RGB_MIN_VALUE, RGB_MAX_VALUE)
 
         if is_rgba:
-            # Combine the adjusted RGB image with the alpha channel
             adjusted_image_with_alpha = np.dstack(
-                [np.array(adjusted_image), alpha_channel])
+                [np.array(adjusted_image), a_channel])
             return adjusted_image_with_alpha
         return np.array(adjusted_image)

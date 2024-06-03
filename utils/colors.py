@@ -21,28 +21,33 @@ def rgb_to_hsv(rgb):
     :param rgb: np.ndarray
     :return: np.ndarray
     """
-
     rgb = rgb.astype('float')
     max_v = np.amax(rgb, axis=2)
     max_c = np.argmax(rgb, axis=2)
     min_v = np.amin(rgb, axis=2)
     min_c = np.argmin(rgb, axis=2)
+    hsv = np.zeros(rgb.shape, dtype='float')
+    delta = max_v - min_v + np.spacing(1)
+
+    max_c_0_0 = ((rgb[..., 1] - rgb[..., 2]) * 60.0 / delta) % 360.0
+    max_c_1_0 = ((rgb[..., 2] - rgb[..., 0]) * 60.0 / delta) + 120.0
+    max_c_2_0 = ((rgb[..., 0] - rgb[..., 1]) * 60.0 / delta) + 240.0
+    max_v_eq_0_1 = np.zeros(hsv[max_v == 0, 1].shape)
+    max_v_neq_0_1 = (1 - min_v / (max_v + np.spacing(1)))[max_v != 0]
 
     hsv = np.zeros(rgb.shape, dtype='float')
     hsv[max_c == min_c, 0] = np.zeros(hsv[max_c == min_c, 0].shape)
-    hsv[max_c == 0, 0] = (((rgb[..., 1] - rgb[..., 2]) * 60.0 / (max_v - min_v + np.spacing(1))) % 360.0)[max_c == 0]
-    hsv[max_c == 1, 0] = (((rgb[..., 2] - rgb[..., 0]) * 60.0 / (max_v - min_v + np.spacing(1))) + 120.0)[max_c == 1]
-    hsv[max_c == 2, 0] = (((rgb[..., 0] - rgb[..., 1]) * 60.0 / (max_v - min_v + np.spacing(1))) + 240.0)[max_c == 2]
-    hsv[max_v == 0, 1] = np.zeros(hsv[max_v == 0, 1].shape)
-    hsv[max_v != 0, 1] = (1 - min_v / (max_v + np.spacing(1)))[max_v != 0]
+    hsv[max_c == 0, 0] = max_c_0_0[max_c == 0]
+    hsv[max_c == 1, 0] = max_c_1_0[max_c == 1]
+    hsv[max_c == 2, 0] = max_c_2_0[max_c == 2]
+    hsv[max_v == 0, 1] = max_v_eq_0_1
+    hsv[max_v != 0, 1] = max_v_neq_0_1
     hsv[..., 2] = max_v
-
     return hsv
 
 
 def hsv_to_rgb(hsv):
     """ convert HSV to RGB color space
-
     :param hsv: np.ndarray
     :return: np.ndarray
     """
@@ -61,12 +66,4 @@ def hsv_to_rgb(hsv):
     rgb[hi == 3, :] = np.dstack((p, q, v))[hi == 3, :]
     rgb[hi == 4, :] = np.dstack((t, p, v))[hi == 4, :]
     rgb[hi == 5, :] = np.dstack((v, p, q))[hi == 5, :]
-
     return rgb
-
-
-
-
-
-
-

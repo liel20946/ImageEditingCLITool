@@ -7,7 +7,6 @@ class Brightness(BaseAdjustment):
     """
     Adjustment for changing the brightness of an image.
     """
-
     def __init__(self, factor):
         """
         Constructor for the Brightness class.

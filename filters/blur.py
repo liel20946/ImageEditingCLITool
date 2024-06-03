@@ -14,8 +14,8 @@ class Blur(BaseFilter):
         :param x: x dimension of the kernel matrix.
         :param y: y dimension of the kernel matrix.
         """
-        self.x = int(x)
-        self.y = int(y)
+        self.x = x
+        self.y = y
         # initialize the kernel matrix, normalized 1's matrix
         self.kernel = np.full((self.x, self.y), 1 / (self.x * self.y))
 

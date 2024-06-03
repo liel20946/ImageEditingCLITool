@@ -9,23 +9,22 @@ from factories import adjustment_factory, filter_factory
 INVALID_NUMBER_OF_ARGS = "you have entered an invalid number of arguments"
 INVALID_COMMAND_MSG = "the entered command is not supported\n"
 
-
 INVALID_DISPLAY_ARGUMENT_MSG = ("display or save argument not found in the"
                                 " correct position\n")
 INVALID_IMAGE_PATH_MSG = "couldn't open image, path is invalid\n"
 INVALID_MIN_ARGS_FOR_EDIT_MSG = "edit command need at least 2 parameters\n"
 INVALID_IMAGE_PARM_MSG = "image parameter is not in the correct format\n"
 
-
 INVALID_ARG_FOR_ADJUSTMENT = "invalid argument for adjustment\n"
 MISSING_ADJUSTMENT_ARGUMENT_MSG = "missing adjustment arguments\n"
-INVALID_ADJUSTMENT_TYPE_MSG = " is an invalid adjustment type\n"
+ADJUSTMENT_CREATION_FAILED = (" adjustment was unable to be created, "
+                              "check its name and the passed arguments\n")
 
-INVALID_FILTER_TYPE_MSG = "invalid filter type\n"
+INVALID_FILTER_TYPE_MSG = " is an invalid filter type\n"
+INVALID_VALUES_FOR_FILTER = "values for the filter arguments are not valid\n"
 MISSING_FILTER_ARGUMENT_MSG = "missing filter arguments\n"
 INVALID_FILTER_ARGUMENT_MSG = "filter arguments are not valid\n"
 INVALID_NUMBER_OF_ARGS_FOR_FILTER = "invalid number of arguments for filter\n"
-
 
 # Usage message
 WRONG_USAGE = ("Usage:\n"
@@ -109,11 +108,9 @@ def extract_sub_args(sub_args, start_index, error_message):
     args_values = []
     end_index = start_index + VALUES_PER_SUB_ARG * len(sub_args)
     for i in range(start_index, end_index, 2):
-        if sys.argv[i] not in sub_args or i+1 >= end_index:
+        if sys.argv[i] not in sub_args or i + 1 >= end_index:
             handle_error(error_message)
-        if not sys.argv[i + 1].replace('.', '', 1).isdigit():
-            handle_error(error_message)
-        args_values.append(float(sys.argv[i + 1]))
+        args_values.append(sys.argv[i + 1])
     return args_values
 
 
@@ -128,7 +125,7 @@ def check_filter_validity(index, filter_parameters):
     if index + 1 >= arg_size:
         handle_error(MISSING_FILTER_ARGUMENT_MSG)
     if sys.argv[index + 1] not in filter_parameters:
-        handle_error(INVALID_FILTER_TYPE_MSG)
+        handle_error(sys.argv[index + 1] + INVALID_FILTER_TYPE_MSG)
     if (index + 1 + VALUES_PER_SUB_ARG *
             len(filter_parameters[sys.argv[index + 1]]) >= arg_size):
         handle_error(MISSING_FILTER_ARGUMENT_MSG)
@@ -152,7 +149,9 @@ def handle_filter_parm(index, filter_parameters, modifiers_list):
 
     new_filter = filter_factory.create_filter(filter_name, *filter_args)
     if new_filter is None:
-        handle_error(INVALID_FILTER_TYPE_MSG)
+        # since check filter validity was already called, filter name
+        # is valid, so the error is in the values
+        handle_error(INVALID_VALUES_FOR_FILTER)
 
     modifiers_list.append(new_filter)
     return 2 + VALUES_PER_SUB_ARG * len(filter_parameters[filter_name])
@@ -167,8 +166,6 @@ def check_adjustment_validity(index):
     arg_size = len(sys.argv)
     if index + 2 >= arg_size:
         handle_error(MISSING_ADJUSTMENT_ARGUMENT_MSG)
-    if not sys.argv[index + 2].replace('.', '', 1).isdigit():
-        handle_error(INVALID_ARG_FOR_ADJUSTMENT)
 
 
 def handle_adjustment_parm(index, modifiers_list):
@@ -179,12 +176,11 @@ def handle_adjustment_parm(index, modifiers_list):
     :return: the index of the current argument, after parsing the adjustment.
     """
     check_adjustment_validity(index)
-    adjustment_name, adjustment_val = (sys.argv[index + 1],
-                                       float(sys.argv[index + 2]))
+    adjustment_name, adjustment_val = sys.argv[index + 1], sys.argv[index + 2]
     curr_adjustment = adjustment_factory.create_adjustment(
         adjustment_name, adjustment_val)
     if curr_adjustment is None:
-        handle_error(adjustment_name + INVALID_ADJUSTMENT_TYPE_MSG)
+        handle_error(adjustment_name + ADJUSTMENT_CREATION_FAILED)
     modifiers_list.append(curr_adjustment)
     return NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT
 

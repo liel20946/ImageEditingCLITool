@@ -19,4 +19,3 @@ class GreyScale(BaseFilter):
             return image_array
         return np.dot(image_array[..., :RGB_SHAPE_LENGTH],
                       [RED_WEIGHT, GREEN_WEIGHT, BLUE_WEIGHT])
-
