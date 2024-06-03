@@ -68,6 +68,7 @@ python3 image_editing_tool.py edit_image --image <path-to-image>
   - `--filter edge-detection`
 - **Sharpen**:
   - `--filter sharpen --factor <value>`
+  - 0 <= factor, 0 is no sharpening, 1 is normal sharpening, 2 is double sharpening, etc.
 - **Grayscale (<span style="color:green;">extra!)**:
   - `--filter grayscale`
 
@@ -75,10 +76,13 @@ python3 image_editing_tool.py edit_image --image <path-to-image>
 
 - **Brightness**:
   - `--adjust brightness <value>`
+  - 0 <= value <= 255
 - **Contrast**:
   - `--adjust contrast <value>`
+  - 0 <= value, 1 is no contrast, 2 is double contrast, etc.
 - **Saturation**:
   - `--adjust saturation <value>`
+  - 0 <= value, 1 is no saturation, 2 is double saturation, etc.
 
 ## Examples
 some examples of the tool in action, mostly simple filter and adjustments combinations.
