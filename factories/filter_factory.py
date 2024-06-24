@@ -1,6 +1,6 @@
 import filters
 from utils.parameter_check import (check_two_positive_ints,
-                                   check_one_positive_float)
+                                   check_non_negative_float)
 
 # Constants for the filter types
 BLUR_TYPE = "blur"
@@ -26,7 +26,7 @@ def create_filter(filter_name, *args):
     elif filter_name == EDGE_DETECTION_TYPE:
         return filters.EdgeDetection()
     elif filter_name == SHARPEN_TYPE:
-        if not check_one_positive_float(*args):
+        if not check_non_negative_float(*args):
             return None
         factor = float(args[0])
         return filters.Sharpen(factor)

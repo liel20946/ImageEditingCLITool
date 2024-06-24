@@ -76,7 +76,7 @@ python3 image_editing_tool.py edit_image --image <path-to-image>
 
 - **Brightness**:
   - `--adjust brightness <value>`
-  - 0 <= value <= 255
+  - -255 <= value <= 255
 - **Contrast**:
   - `--adjust contrast <value>`
   - 0 <= value, 1 is no contrast, 2 is double contrast, etc.

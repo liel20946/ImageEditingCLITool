@@ -7,10 +7,11 @@ def check_two_positive_ints(*args):
     """
     if len(args) != 2:
         return False
-    return args[0].isdigit() and args[1].isdigit()
+    return (args[0].isdigit() and args[1].isdigit()
+            and int(args[0]) > 0 and int(args[1]) > 0)
 
 
-def check_one_positive_float(*args):
+def check_non_negative_float(*args):
     """
     Check that the argument is a float.
     :param args: the arguments to check.
@@ -19,3 +20,14 @@ def check_one_positive_float(*args):
     if len(args) != 1:
         return False
     return args[0].replace('.', '', 1).isdigit()
+
+
+def check_one_float(*args):
+    """
+    Check that the argument is a float.
+    :param args: the arguments to check.
+    :return: True if the argument is a float, False otherwise.
+    """
+    return (check_non_negative_float(*args) or args[0].startswith('-')
+            and check_non_negative_float(args[0][1:]))
+

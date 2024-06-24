@@ -39,7 +39,6 @@ class Saturation(BaseAdjustment):
         adjusted_image = np.clip(adjusted_image, RGB_MIN_VALUE, RGB_MAX_VALUE)
 
         if is_rgba:
-            adjusted_image_with_alpha = np.dstack(
-                [np.array(adjusted_image), a_channel])
+            adjusted_image_with_alpha = np.dstack([adjusted_image, a_channel])
             return adjusted_image_with_alpha
-        return np.array(adjusted_image)
+        return adjusted_image

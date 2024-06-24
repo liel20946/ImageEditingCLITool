@@ -21,7 +21,7 @@ def rgb_to_hsv(rgb):
     :param rgb: np.ndarray
     :return: np.ndarray
     """
-    rgb = rgb.astype('float')
+    rgb = rgb.astype('float') / RGB_MAX_VALUE
     max_v = np.amax(rgb, axis=2)
     max_c = np.argmax(rgb, axis=2)
     min_v = np.amin(rgb, axis=2)
@@ -54,7 +54,7 @@ def hsv_to_rgb(hsv):
     hi = np.floor(hsv[..., 0] / 60.0) % 6
     hi = hi.astype('uint8')
     v = hsv[..., 2].astype('float')
-    f = (hsv[..., 0] / 60.0) - np.floor(hsv[..., 0] / 60.0)
+    f = (hsv[..., 0] / 60.0) - hi
     p = v * (1.0 - hsv[..., 1])
     q = v * (1.0 - (f * hsv[..., 1]))
     t = v * (1.0 - ((1.0 - f) * hsv[..., 1]))
@@ -66,4 +66,4 @@ def hsv_to_rgb(hsv):
     rgb[hi == 3, :] = np.dstack((p, q, v))[hi == 3, :]
     rgb[hi == 4, :] = np.dstack((t, p, v))[hi == 4, :]
     rgb[hi == 5, :] = np.dstack((v, p, q))[hi == 5, :]
-    return rgb
+    return rgb * RGB_MAX_VALUE
