@@ -1,12 +1,12 @@
 import numpy as np
 
-from filters.base_filter import BaseFilter
+from modifiers.base_modifier import BaseModifier
 from utils.colors import RGB_SHAPE_LENGTH, RGB_MIN_VALUE, RGB_MAX_VALUE, \
     CHANNEL_SIZE_INDEX
-import factories.filter_factory as filter_factory
+import factories.modifier_factory as filter_factory
 
 
-class Sharpen(BaseFilter):
+class Sharpen(BaseModifier):
     """
     Filter for sharpening an image.
     """
@@ -17,7 +17,7 @@ class Sharpen(BaseFilter):
         :param factor:
         """
         self.factor = factor
-        self.edge_detection = filter_factory.create_filter('edge-detection')
+        self.edge_detection = filter_factory.create_modifier('edge-detection')
 
     def apply(self, image_array):
         """

@@ -1,11 +1,11 @@
-from adjustments.base_adjustment import BaseAdjustment
+from modifiers.base_modifier import BaseModifier
 from utils.colors import (RGB_SHAPE_LENGTH, RGBA_CHANNEL_SIZE,
                           CHANNEL_SIZE_INDEX, RGB_MIN_VALUE, RGB_MAX_VALUE)
 import numpy as np
 import utils.colors as cs
 
 
-class Saturation(BaseAdjustment):
+class Saturation(BaseModifier):
     """
     Adjustment for changing the saturation of an image.
     """

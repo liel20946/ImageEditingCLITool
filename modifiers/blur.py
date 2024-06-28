@@ -1,10 +1,10 @@
-from filters.base_filter import BaseFilter
+from modifiers.base_modifier import BaseModifier
 from utils.convolution import convolve_md, convolve_2d
 from utils.colors import GREYSCALE_SHAPE_LENGTH
 import numpy as np
 
 
-class Blur(BaseFilter):
+class Blur(BaseModifier):
     """
     Filter for applying a box blur to an image.
     """

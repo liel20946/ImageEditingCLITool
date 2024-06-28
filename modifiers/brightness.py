@@ -1,9 +1,9 @@
 import numpy as np
-from adjustments.base_adjustment import BaseAdjustment
+from modifiers.base_modifier import BaseModifier
 from utils.colors import RGB_MIN_VALUE, RGB_MAX_VALUE
 
 
-class Brightness(BaseAdjustment):
+class Brightness(BaseModifier):
     """
     Adjustment for changing the brightness of an image.
     """

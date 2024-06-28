@@ -28,6 +28,10 @@ def check_one_float(*args):
     :param args: the arguments to check.
     :return: True if the argument is a float, False otherwise.
     """
-    return (check_non_negative_float(*args) or args[0].startswith('-')
-            and check_non_negative_float(args[0][1:]))
+    if len(args) != 1:
+        return False
+    float_str = args[0]
+    if args[0].startswith('-'):
+        float_str = args[0][1:]
+    return float_str.replace('.', '', 1).isdigit()
 

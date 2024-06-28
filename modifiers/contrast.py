@@ -1,9 +1,9 @@
 import numpy as np
-from adjustments.base_adjustment import BaseAdjustment
+from modifiers.base_modifier import BaseModifier
 from utils.colors import RGB_MIN_VALUE, RGB_MAX_VALUE, RGB_MIDDLE_VALUE
 
 
-class Contrast(BaseAdjustment):
+class Contrast(BaseModifier):
     """
     Adjustment for changing the contrast of an image.
     """

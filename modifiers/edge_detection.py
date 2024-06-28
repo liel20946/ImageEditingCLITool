@@ -1,12 +1,12 @@
 import numpy as np
 
-from filters.base_filter import BaseFilter
-import factories.filter_factory as filter_factory
+from modifiers.base_modifier import BaseModifier
+import factories.modifier_factory as filter_factory
 from utils.convolution import convolve_2d
 from utils.colors import RGB_MAX_VALUE
 
 
-class EdgeDetection(BaseFilter):
+class EdgeDetection(BaseModifier):
     """
     Filter for applying edge detection to an image.
     """
@@ -17,7 +17,7 @@ class EdgeDetection(BaseFilter):
         # using sobel operator
         self.vertical_kernel = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
         self.horizontal_kernel = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
-        self.grey_scale_filter = filter_factory.create_filter("greyscale")
+        self.grey_scale_filter = filter_factory.create_modifier("greyscale")
 
     def apply(self, image_array):
         """

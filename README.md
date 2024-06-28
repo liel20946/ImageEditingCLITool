@@ -38,7 +38,7 @@ To use the CLI tool, run the following command:
 ```
 python3 image_editing_tool.py edit_image --image <path-to-image> 
 [--filter < filter-name> --filter-specific_name < filter-specific_value>]
-[--adjust <adjustment-name> ‹value>] 
+[--adjust <adjustment-name> --adjustment-specific_name ‹value>] 
 [--filter < filter-name> --filter-specific_name < filter-specific_value>]
 ...[--display] [--output <output_path>]
 ```
@@ -75,13 +75,13 @@ python3 image_editing_tool.py edit_image --image <path-to-image>
 ## Adjustments
 
 - **Brightness**:
-  - `--adjust brightness <value>`
+  - `--adjust brightness --factor <value>`
   - -255 <= value <= 255
 - **Contrast**:
-  - `--adjust contrast <value>`
+  - `--adjust contrast --factor <value>`
   - 0 <= value, 1 is no contrast, 2 is double contrast, etc.
 - **Saturation**:
-  - `--adjust saturation <value>`
+  - `--adjust saturation --factor <value>`
   - 0 <= value, 1 is no saturation, 2 is double saturation, etc.
 
 ## Examples
@@ -138,4 +138,3 @@ some examples of the tool in action, mostly simple filter and adjustments combin
 
 ## ✍️ Author
 Liel Azulay
-- you can check out my github profile [here](https://github.com/liel20946)

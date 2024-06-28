@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 from PIL import Image
-from factories import adjustment_factory, filter_factory
+from factories import modifier_factory
 
 # Constants #
 
@@ -12,26 +12,26 @@ INVALID_COMMAND_MSG = "the entered command is not supported\n"
 INVALID_DISPLAY_ARGUMENT_MSG = ("display or save argument not found in the"
                                 " correct position\n")
 INVALID_IMAGE_PATH_MSG = "couldn't open image, path is invalid\n"
+INVALID_IMAGE_TYPE_MSG = "image type is not supported\n"
+INVALID_IMAGE_PERMISSION_MSG = "image permission is not valid\n"
 INVALID_MIN_ARGS_FOR_EDIT_MSG = "edit command need at least 2 parameters\n"
 INVALID_IMAGE_PARM_MSG = "image parameter is not in the correct format\n"
 
-INVALID_ARG_FOR_ADJUSTMENT = "invalid argument for adjustment\n"
-MISSING_ADJUSTMENT_ARGUMENT_MSG = "missing adjustment arguments\n"
-ADJUSTMENT_CREATION_FAILED = (" adjustment was unable to be created, "
-                              "check its name and the passed arguments\n")
-
-INVALID_FILTER_TYPE_MSG = " is an invalid filter type\n"
-INVALID_VALUES_FOR_FILTER = "values for the filter arguments are not valid\n"
-MISSING_FILTER_ARGUMENT_MSG = "missing filter arguments\n"
-INVALID_FILTER_ARGUMENT_MSG = "filter arguments are not valid\n"
-INVALID_NUMBER_OF_ARGS_FOR_FILTER = "invalid number of arguments for filter\n"
+INVALID_MODIFIER_TYPE_MSG = " is an invalid modifier type\n"
+INVALID_VALUES_FOR_MODIFIER = ("values for the modifier arguments are not "
+                               "valid\n")
+MISSING_MODIFIER_ARGUMENT_MSG = "missing modifier arguments\n"
+INVALID_MODIFIER_ARGUMENT_MSG = "modifier arguments are not valid\n"
+INVALID_NUMBER_OF_ARGS_FOR_MODIFIER = ("invalid number of arguments for "
+                                       "modifier\n")
 
 # Usage message
 WRONG_USAGE = ("Usage:\n"
                "edit_image --image <path-to-image> [--filter < "
                "filter-name> --filter-specific_name < "
                "filter-specific_value>]\n"
-               "[--adjust <adjustment-name> ‹value>] [--filter < filter-name> "
+               "[--adjust <adjustment-name> --adjustment-specific_name "
+               "‹value>] [--filter < filter-name> "
                "--filter-specific_name < filter-specific_value>]\n"
                "...[--display] [--output <output_path>]")
 
@@ -114,75 +114,48 @@ def extract_sub_args(sub_args, start_index, error_message):
     return args_values
 
 
-def check_filter_validity(index, filter_parameters):
+def check_modifier_validity(index, modifier_parameters):
     """
-    Check if the filter parameters are valid.
-    :param index: index of the filter name in the command line arguments.
-    :param filter_parameters: dictionary of filter parameters.
+    Check if the modifier parameters are valid.
+    :param index: index of the modifier name in the command line arguments.
+    :param modifier_parameters: dictionary of modifier parameters.
     :return: None
     """
     arg_size = len(sys.argv)
     if index + 1 >= arg_size:
-        handle_error(MISSING_FILTER_ARGUMENT_MSG)
-    if sys.argv[index + 1] not in filter_parameters:
-        handle_error(sys.argv[index + 1] + INVALID_FILTER_TYPE_MSG)
+        handle_error(MISSING_MODIFIER_ARGUMENT_MSG)
+    if sys.argv[index + 1] not in modifier_parameters:
+        handle_error(sys.argv[index + 1] + INVALID_MODIFIER_TYPE_MSG)
     if (index + 1 + VALUES_PER_SUB_ARG *
-            len(filter_parameters[sys.argv[index + 1]]) >= arg_size):
-        handle_error(MISSING_FILTER_ARGUMENT_MSG)
+            len(modifier_parameters[sys.argv[index + 1]]) >= arg_size):
+        handle_error(MISSING_MODIFIER_ARGUMENT_MSG)
 
 
-def handle_filter_parm(index, filter_parameters, modifiers_list):
+def handle_modifier_parm(index, modifier_parameters, modifiers_list):
     """
-    Handle parsing the filter parameters.
+    Handle parsing the modifier parameters.x
     :param index: index of current command line argument.
-    :param filter_parameters: dictionary of filter parameters.
+    :param modifier_parameters: dictionary of modifier parameters.
     :param modifiers_list: list of modifiers to apply to the image.
-    :return: the index of the current argument, after parsing the filter
+    :return: number of arguments to skip after parsing the modifier.
     """
-    check_filter_validity(index, filter_parameters)
-    filter_name = sys.argv[index + 1]
-    filter_args = extract_sub_args(filter_parameters[filter_name],
-                                   index + 2, INVALID_FILTER_ARGUMENT_MSG)
+    check_modifier_validity(index, modifier_parameters)
+    modifier_name = sys.argv[index + 1]
+    modifier_args = extract_sub_args(modifier_parameters[modifier_name],
+                                     index + 2, INVALID_MODIFIER_ARGUMENT_MSG)
 
-    if len(filter_args) != len(filter_parameters[filter_name]):
-        handle_error(INVALID_NUMBER_OF_ARGS_FOR_FILTER)
+    if len(modifier_args) != len(modifier_parameters[modifier_name]):
+        handle_error(INVALID_NUMBER_OF_ARGS_FOR_MODIFIER)
 
-    new_filter = filter_factory.create_filter(filter_name, *filter_args)
-    if new_filter is None:
-        # since check filter validity was already called, filter name
+    new_modifier = modifier_factory.create_modifier(modifier_name,
+                                                    *modifier_args)
+    if new_modifier is None:
+        # since check modifier validity was already called, modifier name
         # is valid, so the error is in the values
-        handle_error(INVALID_VALUES_FOR_FILTER)
+        handle_error(INVALID_VALUES_FOR_MODIFIER)
 
-    modifiers_list.append(new_filter)
-    return 2 + VALUES_PER_SUB_ARG * len(filter_parameters[filter_name])
-
-
-def check_adjustment_validity(index):
-    """
-    Check if the adjustment parameters are valid.
-    :param index: index of the adjustment name in the command line arguments.
-    :return: None
-    """
-    arg_size = len(sys.argv)
-    if index + 2 >= arg_size:
-        handle_error(MISSING_ADJUSTMENT_ARGUMENT_MSG)
-
-
-def handle_adjustment_parm(index, modifiers_list):
-    """
-    Handle parsing the adjustment parameters.
-    :param index: index of current command line argument.
-    :param modifiers_list: list of modifiers to apply to the image.
-    :return: the index of the current argument, after parsing the adjustment.
-    """
-    check_adjustment_validity(index)
-    adjustment_name, adjustment_val = sys.argv[index + 1], sys.argv[index + 2]
-    curr_adjustment = adjustment_factory.create_adjustment(
-        adjustment_name, adjustment_val)
-    if curr_adjustment is None:
-        handle_error(adjustment_name + ADJUSTMENT_CREATION_FAILED)
-    modifiers_list.append(curr_adjustment)
-    return NUMBER_OF_ARGS_FOR_SINGLE_ADJUSTMENT
+    modifiers_list.append(new_modifier)
+    return 2 + VALUES_PER_SUB_ARG * len(modifier_parameters[modifier_name])
 
 
 def parse_modifier_args(modifiers_list):
@@ -191,14 +164,12 @@ def parse_modifier_args(modifiers_list):
     :param modifiers_list: list to store the modifiers to apply to the image.
     :return: the index of the current argument, after parsing the modifiers.
     """
-    filter_parameters = filter_factory.get_filters_parameters()
+    modifiers_parameters = modifier_factory.get_modifiers_parameters()
     i = MODIFIERS_START_INDEX
     arg_size = len(sys.argv)
     while i < arg_size:
-        if sys.argv[i] == FILTER_PARAMETER:
-            i += handle_filter_parm(i, filter_parameters, modifiers_list)
-        elif sys.argv[i] == ADJUSTMENT_PARAMETER:
-            i += handle_adjustment_parm(i, modifiers_list)
+        if sys.argv[i] in {FILTER_PARAMETER, ADJUSTMENT_PARAMETER}:
+            i += handle_modifier_parm(i, modifiers_parameters, modifiers_list)
         else:
             break
     return i
@@ -227,6 +198,10 @@ def load_image(image_path):
         return image
     except FileNotFoundError:
         handle_error(INVALID_IMAGE_PATH_MSG)
+    except TypeError:
+        handle_error(INVALID_IMAGE_TYPE_MSG)
+    except ValueError:
+        handle_error(INVALID_IMAGE_PERMISSION_MSG)
 
 
 def run_edit_command():
