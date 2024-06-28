@@ -1,4 +1,4 @@
-# 🌄 Advanced Image Editing CLI Tool 
+# 🌄 Image Editing CLI Tool 
 
 ## 👋 Introduction
 
