@@ -1,6 +1,5 @@
 from modifiers.base_modifier import BaseModifier
-from utils.convolution import convolve_md, convolve_2d
-from utils.colors import GREYSCALE_SHAPE_LENGTH
+from utils.convolution import convolve
 import numpy as np
 
 
@@ -25,6 +24,4 @@ class Blur(BaseModifier):
         :param image_array: numpy array of the image to apply the filter to.
         :return: image_array with the box blur filter applied.
         """
-        if len(image_array.shape) == GREYSCALE_SHAPE_LENGTH:
-            return convolve_2d(image_array, self.kernel)
-        return convolve_md(image_array, self.kernel)
+        return convolve(image_array, self.kernel)

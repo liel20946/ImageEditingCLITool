@@ -1,4 +1,17 @@
 import numpy as np
+from .colors import GREYSCALE_SHAPE_LENGTH
+
+
+def convolve(image_array, kernel):
+    """
+    Apply a convolution kernel to an image array.
+    :param image_array: the image numpy array.
+    :param kernel: the convolution kernel.
+    :return: the convolved image array.
+    """
+    if len(image_array.shape) == GREYSCALE_SHAPE_LENGTH:
+        return convolve_2d(image_array, kernel)
+    return convolve_md(image_array, kernel)
 
 
 def convolve_md(image_array, kernel):

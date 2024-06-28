@@ -2,7 +2,7 @@ import numpy as np
 
 from modifiers.base_modifier import BaseModifier
 import factories.modifier_factory as filter_factory
-from utils.convolution import convolve_2d
+from utils.convolution import convolve
 from utils.colors import RGB_MAX_VALUE
 
 
@@ -27,8 +27,8 @@ class EdgeDetection(BaseModifier):
         """
         greyed_image = self.grey_scale_filter.apply(image_array)
 
-        vertical_edges = convolve_2d(greyed_image, self.vertical_kernel)
-        horizontal_edges = convolve_2d(greyed_image, self.horizontal_kernel)
+        vertical_edges = convolve(greyed_image, self.vertical_kernel)
+        horizontal_edges = convolve(greyed_image, self.horizontal_kernel)
 
         edges = np.sqrt(np.square(vertical_edges) +
                         np.square(horizontal_edges))
